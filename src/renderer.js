@@ -1,9 +1,14 @@
 const ca = require('win-ca/api')
 const withOut = require('without')
 const forge = require('node-forge')
+const $ = require('jquery')
 
 
-fetch().then(render)
+$(document).ready(function() {
+    $("#demo").html("Hello, World!");
+});
+
+fetch().then(returnData)
 
 function fetch() {
     var list = []
@@ -21,10 +26,10 @@ function fetch() {
         .then(_ => list)
 }
 
-function render(list) {
+function returnData(list) {
     //cert = forge.pki.certificateFromPem(pem)
     //document.body.innerHTML = withOut(button(pem))
-    document.body.innerHTML = withOut(t)(list)
+    return returnCerts(list)
 }
 
 let cert
@@ -33,16 +38,22 @@ let msg
 var obj
     //let count = 0;
 
-function t(roots) {
+function returnCerts(roots) {
     for (let pem of roots) {
         //msg = forge.pem.decode(pem)[count]
         // convert DER to ASN.1 object
         //obj = forge.asn1.fromDer(msg.body);
         cert = forge.pki.certificateFromPem(pem)
-        subject = cert.subject.attributes
-            .map(attr => [attr.shortname, attr.value].join('='))
+        issurer = cert.issuer.attributes
+            .map(attr => ['', attr.value].join(': '))
             .join(', ');
-        button(subject)
+
+        subject = cert.subject.attributes
+            .map(attr => [attr.shortName ? attr.shortName.toString() : null, attr.value].join('='))
+            .join(', ');
+        var json = JSON.stringify(issurer);
+        console.log(json)
+        return json
             //count++
             //textarea(pem)
     }
