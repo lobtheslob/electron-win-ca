@@ -4,16 +4,18 @@ var electron = require('electron')
 electron.app.on('ready', createWindow)
 
 function createWindow() {
-  var wnd = new electron.BrowserWindow({
-    webPreferences: {
-      nodeIntegration: true,
-      allowEval: false,
-    }
-  })
-  wnd.loadFile(path.join(__dirname, 'index.html'))
-  wnd.on('close', quit)
+    var wnd = new electron.BrowserWindow({
+        width: 325,
+        height: 240,
+        webPreferences: {
+            nodeIntegration: true,
+            allowEval: false,
+        }
+    })
+    wnd.loadFile(path.join(__dirname, 'index.html'))
+    wnd.on('close', quit)
 }
 
 function quit() {
-  electron.app.quit()
+    electron.app.quit()
 }

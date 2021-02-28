@@ -8,7 +8,9 @@ $(document).ready(function() {
     $("#demo").html("Hello, World!");
 });
 
-fetch().then(returnData)
+fetch()
+    //  .then(returnData)
+    .then(render)
 
 function fetch() {
     var list = []
@@ -30,6 +32,14 @@ function returnData(list) {
     //cert = forge.pki.certificateFromPem(pem)
     //document.body.innerHTML = withOut(button(pem))
     return returnCerts(list)
+}
+
+function render(list) {
+
+    //cert = forge.pki.certificateFromPem(pem)
+    //document.body.innerHTML = withOut(button(pem))
+    document.body.innerHTML = withOut(t)(list)
+
 }
 
 let cert
@@ -56,5 +66,29 @@ function returnCerts(roots) {
         return json
             //count++
             //textarea(pem)
+    }
+}
+
+function t(roots) {
+    for (let pem of roots) {
+        //msg = forge.pem.decode(pem)[count]
+        // convert DER to ASN.1 object
+        //obj = forge.asn1.fromDer(msg.body);
+        cert = forge.pki.certificateFromPem(pem)
+        issurer = cert.issuer.attributes
+            .map(attr => ['', attr.value].join(': '))
+            .join(', ');
+
+        subject = cert.subject.attributes
+            .map(attr => [attr.shortName ? attr.shortName.toString() : null, attr.value].join('='))
+            .join(', ');
+        //        console.log("issuer typer: ", typeof issurer);
+        filterStrSub = subject.includes("affiliate")
+        filterStrIss = issurer.includes("Veterans")
+        if (filterStrSub && filterStrIss) {
+            button(subject)
+        }
+        //count++
+        //textarea(pem)
     }
 }
