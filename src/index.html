@@ -25,13 +25,19 @@
     <script src="../node_modules/@popperjs/core/dist/umd/popper.js"></script>-->
     <!-- <script src="../node_modules/bootstrap-material-design/dist/js/bootstrap-material-design.js"></script> -->
     <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
-    <script src="renderer.js"></script>
 
 </head>
 
 <body>
-    Loading...
-    <!-- <p id="demo"></p> -->
+    <div class="container">
+        <h1 class="title">Get Certs From Main IPC Process</h1>
+        <div class="certs" id="count"></div>
+        <button class="btn" id="start">Start</button>
+    </div>
+
+    <script>
+        require('./listener')
+    </script>
 </body>
 
 </html>
