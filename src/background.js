@@ -12,11 +12,12 @@ function createWindow() {
         width: 325,
         height: 240,
         webPreferences: {
+            webSecurity: false,
             nodeIntegration: true,
             allowEval: false,
         }
     })
-    wnd.loadFile(path.join(__dirname, 'index.html'))
+    wnd.loadURL(`file://${__dirname}/src/index.html`);
     wnd.on('close', quit)
 }
 
