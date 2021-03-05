@@ -12,8 +12,7 @@ function createWindow() {
         width: 325,
         height: 240,
         webPreferences: {
-            nodeIntegration: true,
-            allowEval: false,
+            nodeIntegration: true
         }
     })
     wnd.loadFile(path.join(__dirname, 'index.html'))

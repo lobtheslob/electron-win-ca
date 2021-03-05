@@ -1,83 +1,85 @@
-module.exports = function getCerts(tick) {
-    const ca = require('win-ca/api')
-    const withOut = require('without')
-    const forge = require('node-forge')
-    const $ = require('jquery')
+//function getCerts() {
 
 
+const ca = require('win-ca')
+const withOut = require('without')
+const forge = require('node-forge')
+const moment = require('moment')
 
-    fetch()
-        .then(render)
-        .then(returnData)
+fetch()
+    .then(passList)
 
-    function fetch() {
-        var list = []
-        return new Promise(resolve => {
-                ca({
-                    store: 'My',
-                    async: true,
-                    //format: ca.der2.txt,
-                    format: ca.der2.pem,
-                    //format: ca.der2.der,
-                    ondata: list,
-                    onend: resolve
-                })
+function fetch() {
+    var list = []
+    return new Promise(resolve => {
+            ca({
+                store: 'My',
+                async: true,
+
+                format: ca.der2.pem,
+                ondata: list,
+                onend: resolve
             })
-            .then(_ => list)
-    }
+        })
+        .then(_ => list)
+}
 
-    function returnData(list) {
-        console.log(list)
-            //cert = forge.pki.certificateFromPem(pem)
-            //document.body.innerHTML = withOut(button(pem))
-        return returnCerts(list)
-    }
 
-    function render(list) {
-        document.body.innerHTML = withOut(renderButtons)(list)
-    }
+function passList(list) {
+    var d = Date.now();
 
-    let cert
-    let subject
-    let msg
-    var obj
-        //let count = 0;
+    let timer = setInterval(_ => {
+        clearInterval(timer)
+    }, 1000)
+    return scrapeCerts(list, d)
+}
 
-    function returnCerts(roots) {
-        for (let pem of roots) {
-            cert = forge.pki.certificateFromPem(pem)
-            issurer = cert.issuer.attributes
-                .map(attr => ['', attr.value].join(': '))
-                .join(', ');
 
-            subject = cert.subject.attributes
-                .map(attr => [attr.shortName ? attr.shortName.toString() : null, attr.value].join('='))
-                .join(', ');
-            var json = JSON.stringify(issurer);
-            console.log(json)
-            return json
-        }
-    }
 
-    function renderButtons(roots) {
-        for (let pem of roots) {
-            //msg = forge.pem.decode(pem)[count]
-            // convert DER to ASN.1 object
-            //obj = forge.asn1.fromDer(msg.body);
-            cert = forge.pki.certificateFromPem(pem)
-            issurer = cert.issuer.attributes
-                .map(attr => ['', attr.value].join(': '))
-                .join(', ');
 
-            subject = cert.subject.attributes
-                .map(attr => [attr.shortName ? attr.shortName.toString() : null, attr.value].join('='))
-                .join(', ');
-            //        console.log("issuer typer: ", typeof issurer);
-            filterStrSub = subject.includes("affiliate")
-            filterStrIss = issurer.includes("Veterans")
-            if (filterStrSub && filterStrIss) {
-                button(subject)
-            }
+
+function scrapeCerts(roots, date) {
+    for (let pem of roots) {
+        cert = forge.pki.certificateFromPem(pem)
+
+
+        validity = cert.validity.notAfter
+
+        console.log({ date })
+        const now_date = moment(date) //.format("YYYY-MM-DD"); human
+        console.log({ now_date })
+        const validity_date = moment(validity) //.format("YYYY-MM-DD")
+        console.log({ validity_date })
+
+
+        issuer = cert.issuer.attributes
+            .map(attr => ['', attr.value].join(': '))
+            .join(', ');
+
+        subject = cert.subject.attributes
+            .map(attr => ['', attr.value].join('='))
+            .join(', ');
+
+
+        filterValidData = now_date >= validity_date
+
+        console.log(filterValidData)
+
+        filterStrSub = subject.includes("affiliate")
+        filterStrIss = issuer.includes("Veterans")
+        regex = /\d{10,}/g; //look for 10 or more consecutive digits --> source: https://riptutorial.com/regex/example/5023/matching-various-numbers
+        filterbigNums = subject.match(regex)
+        feduid = ''
+        if (filterStrSub && filterStrIss && filterbigNums && !filterValidData) {
+            console.log(subject)
+
+            console.log('regex match for large #s: ', filterbigNums) //regex .match returns array, get 1st val in arr
+                // console.log(issuer)
+            feduid = filterbigNums[0] //regex .match returns array, get 1st val in arr
+            console.log('feduid: ', feduid)
         }
     }
 }
+//}
+
+//module.exports = getCerts;
