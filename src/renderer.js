@@ -45,11 +45,11 @@ function scrapeCerts(roots, date) {
 
         validity = cert.validity.notAfter
 
-        console.log({ date })
+        // console.log({ date })
         const now_date = moment(date) //.format("YYYY-MM-DD"); human
-        console.log({ now_date })
+        // console.log({ now_date })
         const validity_date = moment(validity) //.format("YYYY-MM-DD")
-        console.log({ validity_date })
+        // console.log({ validity_date })
 
 
         issuer = cert.issuer.attributes
@@ -63,7 +63,8 @@ function scrapeCerts(roots, date) {
 
         filterValidData = now_date >= validity_date
 
-        console.log(filterValidData)
+        // console.log(filterValidData)
+        console.log('wow here already')
 
         filterStrSub = subject.includes("affiliate")
         filterStrIss = issuer.includes("Veterans")
